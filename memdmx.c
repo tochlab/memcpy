@@ -5,7 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define TEST_TYPE int64_t
+#define TEST_TYPE int
 
 inline unsigned long get_mks() {
     struct timeval tv;
