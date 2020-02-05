@@ -40,17 +40,17 @@ int main() {
     int alloc_len8 = samples * sizeof(TEST_TYPE);
 
     TEST_TYPE* src = malloc(alloc_len8);
-    TEST_TYPE* dst = malloc(alloc_len8);
+    TEST_TYPE* dst0 = malloc(alloc_len8);
     TEST_TYPE* dst1 = malloc(alloc_len8);
 
-    printf("src %p dst %p dst1 %p\n", src, dst, dst1);
+    printf("src %p dst0 %p dst1 %p\n", src, dst0, dst1);
 
     double MBytes = (((double) alloc_len8) / (1024 * 1024.0));
 
     srand(samples);
     for (int i = 0; i < samples; i++) {
         src[i] = rand();
-        dst[i] = rand();
+        dst0[i] = rand();
         dst1[i] = rand();
     }
     printf("Sleeping...\n");
@@ -58,40 +58,40 @@ int main() {
 
     printf("Running!\n");
     unsigned long start_mks = get_mks();
-    memcpy(dst, src, alloc_len8);
+    memcpy(dst0, src, alloc_len8);
     unsigned long end_mks = get_mks();
 
     unsigned long mks = end_mks - start_mks;
     double secs = mks / 1000000.0;
 
-    printf("Native   memcpy: time %8lu mks size %4.2f MBytes speed %6.2f MB/s\n", mks, MBytes, MBytes / secs);
+    printf("Native   memcpy: time %8lu mks size %4.2f MBytes speed %8.2f MB/s\n", mks, MBytes, MBytes / secs);
 
     start_mks = get_mks();
-    memcpy_test(dst, src, samples);
+    memcpy_test(dst0, src, samples);
     end_mks = get_mks();
 
     mks = end_mks - start_mks;
     secs = mks / 1000000.0;
-    printf("HandMade memcpy: time %8lu mks size %4.2f MBytes speed %6.2f MB/s\n", mks, MBytes, MBytes / secs);
+    printf("HandMade memcpy: time %8lu mks size %4.2f MBytes speed %8.2f MB/s\n", mks, MBytes, MBytes / secs);
 
     start_mks = get_mks();
-    TEST_TYPE s = sumsum(dst, samples);
+    TEST_TYPE s = sumsum(dst0, samples);
     end_mks = get_mks();
 
     mks = end_mks - start_mks;
     secs = mks / 1000000.0;
-    printf("HandMade sumsum: time %8lu mks size %4.2f MBytes speed %6.2f MB/s (sum %d)\n", mks, MBytes, MBytes / secs, s);
+    printf("HandMade sumsum: time %8lu mks size %4.2f MBytes speed %8.2f MB/s (sum %d)\n", mks, MBytes, MBytes / secs, s);
 
     start_mks = get_mks();
-    memdmx(src, dst, dst1, samples);
+    memdmx(src, dst0, dst1, samples);
     end_mks = get_mks();
 
     mks = end_mks - start_mks;
     secs = mks / 1000000.0;
-    printf("HandMade  demux: time %8lu mks size %4.2f MBytes speed %6.2f MB/s\n", mks, MBytes, MBytes / secs);
+    printf("HandMade  demux: time %8lu mks size %4.2f MBytes speed %8.2f MB/s\n", mks, MBytes, MBytes / secs);
 
     free(src);
-    free(dst);
+    free(dst0);
     free(dst1);
     return 0;
 }
