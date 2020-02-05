@@ -15,6 +15,12 @@ void demux(iqs *src, iqs *dst0, iqs *dst1, int len) {
     }
 }
 
+inline unsigned long get_mks() {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return tv.tv_sec*1000000 + tv.tv_usec;
+}
+
 int main() {
     int len;
     if (!fscanf(stdin, "%i", &len) ) {
@@ -28,15 +34,14 @@ int main() {
         src[i].i = rand() % 2 + 1;
         src[i].q = rand() % 2 + 1;
     }
-    struct timeval start;
-    struct timeval end;
-    gettimeofday(&start, NULL);
+    unsigned long start_mks = get_mks();
     demux(src, dst0, dst1, len);
-    gettimeofday(&end, NULL);
-    unsigned long usec = (end.tv_sec*1000000l + end.tv_usec) - (start.tv_sec*1000000l + start.tv_usec);
-    double Mbytes = (((double) len*2*sizeof(iqs)) / (1024*1024.0f));
-    double secs = usec / 1000000.0f;
-    printf("DemuxTime %lu size %f speed %f Mb/s\n", usec, Mbytes, Mbytes/secs);
+    unsigned long end_mks = get_mks();
+    unsigned long mks = end_mks-start_mks;
+
+    double MBytes = (((double) len*2*sizeof(iqs)) / (1024*1024.0f));
+    double secs = mks / 1000000.0f;
+    printf("DemuxTime %lu size %f speed %f Mb/s\n", mks, MBytes, MBytes/secs);
 
     int sum = 0;
     for(int i = 0;i<len/2;i++) {
