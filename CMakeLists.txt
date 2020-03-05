@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
-project(memdmx C)
+project(memdmx)
 
-set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_FLAGS "-Wall -Wextra -O3 -march=native")
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -O3 -march=native")
 
-add_executable(memdmx memdmx.c)
+add_executable(memdmx memdmx.cpp)
